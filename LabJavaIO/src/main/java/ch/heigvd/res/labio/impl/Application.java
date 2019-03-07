@@ -82,11 +82,9 @@ public class Application implements IApplication {
   public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
     clearOutputDirectory();
     QuoteClient client = new QuoteClient();
-    String filename;
     for (int i = 0; i < numberOfQuotes; i++) {
-      filename = "quote-" + (i+1) + ".utf8";
       Quote quote = client.fetchQuote();
-      storeQuote(quote, filename);
+      storeQuote(quote, String.format("quote-%d", i+1));
 
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
@@ -121,21 +119,20 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    List<String> tags = quote.getTags();
     String path = "";
     for(String tag : quote.getTags()){
       path += "/" + tag;
     }
+    String filepath = WORKSPACE_DIRECTORY + path + "/" + filename + ".utf8";
 
-    File tmp = new File(WORKSPACE_DIRECTORY + path + "/"+filename );
-    tmp.getParentFile().mkdirs();
-    tmp.createNewFile();
+    File file = new File(filepath);
+    file.getParentFile().mkdirs();
 
     Writer writer = null;
 
     try {
       writer = new BufferedWriter(new OutputStreamWriter(
-              new FileOutputStream(WORKSPACE_DIRECTORY + path + "/"+filename), "utf-8"));
+              new FileOutputStream(filepath), "utf-8"));
       writer.write(quote.getQuote());
     } catch (IOException ex) {
       // Report
