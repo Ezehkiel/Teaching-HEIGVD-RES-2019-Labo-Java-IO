@@ -26,6 +26,8 @@ public class Application implements IApplication {
    * to where the Java application is invoked.
    */
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
+  public static String FORMAT = "utf-8";
+  public static String EXTENSION = ".utf8";
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
   
@@ -119,12 +121,16 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    String path = "";
-    for(String tag : quote.getTags()){
-      path += "/" + tag;
-    }
-    String filepath = WORKSPACE_DIRECTORY + path + "/" + filename + ".utf8";
+    String path = WORKSPACE_DIRECTORY ;
+    String dirSeparator = "/";
 
+    for(String tag : quote.getTags()){
+      path += dirSeparator + tag;
+    }
+
+    String filepath = path + dirSeparator + filename + EXTENSION;
+
+    /* Creation of directories */
     File file = new File(filepath);
     file.getParentFile().mkdirs();
 
@@ -132,12 +138,15 @@ public class Application implements IApplication {
 
     try {
       writer = new BufferedWriter(new OutputStreamWriter(
-              new FileOutputStream(filepath), "utf-8"));
+              new FileOutputStream(filepath), FORMAT));
       writer.write(quote.getQuote());
     } catch (IOException ex) {
       // Report
     } finally {
-      try {writer.close();} catch (Exception ex) {/*ignore*/}
+      try {
+        writer.close();
+      } catch (Exception ex) {
+        /*ignore*/}
     }
 
   }
@@ -151,11 +160,11 @@ public class Application implements IApplication {
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
       @Override
       public void visit(File file) {
-        /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-         */
+        try {
+          writer.write(file.getPath()+ "\n");
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
     });
   }

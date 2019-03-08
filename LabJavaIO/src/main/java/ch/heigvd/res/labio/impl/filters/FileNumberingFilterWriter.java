@@ -16,7 +16,6 @@ import java.util.logging.Logger;
  * @author Olivier Liechti
  */
 public class FileNumberingFilterWriter extends FilterWriter {
-  private int compteurLigne = 1;
   private int lineCounter = 1;
   private int previousChar = -1;
   private static final char rSeparator = '\r';
