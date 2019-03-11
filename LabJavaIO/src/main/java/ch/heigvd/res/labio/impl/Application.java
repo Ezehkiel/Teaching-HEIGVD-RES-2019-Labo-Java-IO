@@ -124,6 +124,7 @@ public class Application implements IApplication {
     String path = WORKSPACE_DIRECTORY ;
     String dirSeparator = "/";
 
+    /* generation of the file's path with his tags */
     for(String tag : quote.getTags()){
       path += dirSeparator + tag;
     }

@@ -18,9 +18,9 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
   private int lineCounter = 1;
   private int previousChar = -1;
-  private static final char rSeparator = '\r';
-  private static final char nSeparator = '\n';
-  private static final String tSeparator = "\t";
+  private static final char R_SEPARATOR = '\r';
+  private static final char N_SEPARATOR = '\n';
+  private static final String T_SEPARATOR = "\t";
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
@@ -42,27 +42,28 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(int c) throws IOException {
-    // Check if this is the first line
+
+    /* Check if this is the first line */
     if (lineCounter == 1){
-      out.write(lineCounter + tSeparator);
+      out.write(lineCounter + T_SEPARATOR);
       out.write(c);
       lineCounter++;
     } else {
       // Check for the MACOS separator
-      if (previousChar == rSeparator && c != nSeparator) {
-        out.write(lineCounter + tSeparator);
+      if (previousChar == R_SEPARATOR && c != N_SEPARATOR) {
+        out.write(lineCounter + T_SEPARATOR);
         lineCounter++;
       }
 
       out.write(c);
 
-      // Check if we have a Unix / Windows new line
-      if (c == nSeparator){
-        out.write(lineCounter + tSeparator);
+      /* Check if we have a Unix / Windows new line */
+      if (c == N_SEPARATOR){
+        out.write(lineCounter + T_SEPARATOR);
         lineCounter++;
       }
     }
-    // update previous char to further check if it is the MACOS separator
+    /* update previous char to further check if it is the MACOS separator */
     previousChar = c;
   }
 }
