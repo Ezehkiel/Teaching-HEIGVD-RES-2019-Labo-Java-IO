@@ -26,7 +26,7 @@ public class Application implements IApplication {
    * to where the Java application is invoked.
    */
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
-  public static String FORMAT = "utf-8";
+  public static String FORMAT = "UTF-8";
   public static String EXTENSION = ".utf8";
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
